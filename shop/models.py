@@ -6,6 +6,8 @@ from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
 import datetime as dt
 
+from django.db.models.fields import IntegerField
+
 
 """USER MODEL"""
 class MyAccountManager(BaseUserManager):
@@ -45,7 +47,6 @@ class Users(AbstractBaseUser):
     profile_photo = CloudinaryField('image', default='image/upload/v1631717620/default_uomrne.jpg') 
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(default=dt.datetime.now)
-    is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_storeadmin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -68,4 +69,27 @@ class Users(AbstractBaseUser):
     class Meta:
         verbose_name_plural='Users'
 
-""""""
+"""ITEM"""
+class Deliveries(models.Model):
+    item_code = models.CharField(max_length=50) 
+    item_name = models.CharField(max_length=50)  
+    status = models.BooleanField(default=False)
+    items_received = models.IntegerField(default=0)
+    items_spoiled = models.IntegerField(default=0)
+    date_delivered = models.DateTimeField(default=dt.datetime.now)
+
+
+class Item(models.Model):
+    item_code = models.CharField(max_length=50) 
+    item_name = models.CharField(max_length=50)  
+    number_of_items = models.IntegerField(default=0)
+    buying_price=models.FloatField(default=0.0)
+    selling_price=models.FloatField(default=0.0)
+
+
+class Request(models.Model):
+    item_name = models.CharField(max_length=50)  
+    number_of_items = models.IntegerField(default=0)
+    status = models.CharField(max_length=50)
+    clerk = models.ForeignKey("Users",on_delete=models.CASCADE)
+
