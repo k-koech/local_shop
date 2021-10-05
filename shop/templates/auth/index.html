@@ -1,0 +1,61 @@
+{% extends 'auth/auth_base.html' %}
+
+
+{% block content %}
+ <!-- ======= landing page ======= -->
+ <section id="hero" class="d-flex align-items-center">
+  <div class="container" data-aos="zoom-out" data-aos-delay="100" >
+    <h1>Welcome to <span>LocalShop</span></h1>
+    <h2></h2>
+    <div class="d-flex">
+      <a href="/login" style="margin-right: 10px;" class="btn-get-started mr-5">Clerks</a>
+      <a href="/login" class="ml-5 btn btn-outline-primary"><i class="fa fa-sign-in" aria-hidden="true"></i>
+        <span>Store Admin</span></a>
+    </div>
+    <box-icon name='log-in-circle'></box-icon>
+  </div>
+</section>
+<!-- End of landing page -->
+
+<main id="main">
+  <section id="featured-services" class="featured-services">
+    <div class="container" data-aos="fade-up">
+
+      <div class="row">
+        <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+          <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
+            <div class="icon"><i class="bx bxl-dribbble"></i></div>
+            <h4 class="title"><a href="">Take stock</a></h4>
+            <p class="description">Count the number of each item to be added in stock</p>
+          </div>
+        </div>
+    
+        <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+          <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
+            <div class="icon"><i class="bx bx-file"></i></div>
+            <h4 class="title"><a href="">Generate Reports</a></h4>
+            <p class="description">Generate weekly, monthly and even annual reports of stock.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+          <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
+            <div class="icon"><i class="bx bx-tachometer"></i></div>
+            <h4 class="title"><a href="">Visualize Reports</a></h4>
+            <p class="description">Represent the reports in a graph </p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+          <div class="icon-box" data-aos="fade-up" data-aos-delay="400">
+            <div class="icon"><i class="bx bx-world"></i></div>
+            <h4 class="title"><a href="">Generation and visualization of weekly, monthly and annual reports.</a></h4>
+            <p class="description">All reports should be in graphical format after generation</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+{% endblock %}
