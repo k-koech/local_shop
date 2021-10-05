@@ -40,18 +40,15 @@ class Users(AbstractBaseUser):
     name = models.CharField( max_length=200)  
     username = models.CharField( max_length=200, blank=True)  
     email = models.CharField( max_length=100, unique=True)
-    about_me = models.TextField(null=True)
-    id_number = models.IntegerField(null=True)
+    bio = models.TextField(null=True)
     phone_number = models.CharField(max_length = 15,blank =True)
-    neighborhood=models.ForeignKey("Neighborhood",on_delete=models.CASCADE,null=True)
     profile_photo = CloudinaryField('image', default='image/upload/v1631717620/default_uomrne.jpg') 
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(default=dt.datetime.now)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_storeadmin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    password_reset = models.CharField( max_length=50, default="e5viu3snjorndvd")    
     password = models.CharField(max_length=100)
     
     USERNAME_FIELD = 'email'
@@ -70,3 +67,5 @@ class Users(AbstractBaseUser):
 
     class Meta:
         verbose_name_plural='Users'
+
+""""""
