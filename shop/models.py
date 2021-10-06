@@ -69,6 +69,7 @@ class Users(AbstractBaseUser):
     class Meta:
         verbose_name_plural='Users'
 
+
 """ITEM"""
 class Deliveries(models.Model):
     item_code = models.CharField(max_length=50) 

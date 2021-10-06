@@ -2,9 +2,53 @@
 {% load static %}
 
 {% block content %}
+{% if user.is_superuser %}
+<!-- START OF MERCHANT SECTION -->
+<main>
+    <div class="container-fluid px-4 mt-5">
+        <h4>Merchant</h4>
+        <div class="row">
+            <div class="col-lg-5">
+                <h6>Register a Store Admin</h6>
+                {% for message in messages %}
+                        {% if message.tags == "error" %}
+                            <div  class="alert alert-danger">{{ message }}</div>
+                        {% else %}
+                            <div  class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endif %}
+                {% endfor %}
+                <form method="POST" action="/register_storeadmin">
+                    {% csrf_token %}
+                    <div class="form-group mb-3">
+                        <label for="exampleInputEmail1">Name</label>
+                        <input type="text" class="form-control" required name="name" placeholder="Enter name">
+                    </div>
+                    <div class="form-group  mb-3">
+                      <label for="exampleInputEmail1">Email address</label>
+                      <input type="email" class="form-control" required name="email" placeholder="Enter email">
+                    </div>
+                    <div class="form-group  mb-3">
+                        <label for="exampleInputEmail1">Username</label>
+                        <input type="text" class="form-control" required name="username" placeholder="Enter username">
+                      </div>
+                    <div class="form-group  mb-3">
+                        <label for="exampleInputEmail1">Phone number</label>
+                        <input type="text" class="form-control" required name="phone" placeholder="Enter phone number">
+                    </div>
+                   
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- END OF MERCHANT SECTION -->
+
+<!-- START OF STORE ADMIN SECTION -->
+{% elif user.is_storeadmin %}
 <main>
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Dashboard</h1>
+        <h1 class="mt-4">Store Admin Dashboard</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Dashboard</li>
         </ol>
@@ -108,4 +152,7 @@
         </div>
     </div>
 </main>
+<!-- END OF STORE ADMIN SECTION -->
+
+{% endif %}
 {% endblock %}

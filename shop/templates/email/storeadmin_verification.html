@@ -1,0 +1,23 @@
+
+<style>
+button
+{
+    margin: 5px;
+    background-color: rgb(165, 165, 255);
+    padding: 5px;
+    border-radius: 5px;
+}
+</style>
+
+<h1>Hello {{name}}</h1>
+
+<h5>Welcome to the LocalShop. Click 
+<form method="post" action="http://127.0.0.1:8000/activate_storeadmin/{{id}}">
+    {% csrf_token %}
+<button type="submit">Here</button>
+</form>
+ to activate your account.</h5>
+<h5>Use password {{password}} to login to your account. Ensure that you change your password after login.</h5>
+
+
+
