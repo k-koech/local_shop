@@ -84,6 +84,7 @@ class Deliveries(models.Model):
     clerk = models.ForeignKey("Users",on_delete=models.CASCADE,default=1)
 
 
+
 class Item(models.Model):
     item_code = models.CharField(max_length=50) 
     item_name = models.CharField(max_length=50)  
