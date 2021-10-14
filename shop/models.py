@@ -40,7 +40,7 @@ class MyAccountManager(BaseUserManager):
         
 class Users(AbstractBaseUser):
     name = models.CharField( max_length=200)  
-    username = models.CharField( max_length=200, blank=True)  
+    username = models.CharField( max_length=200, blank=True,unique=True)  
     email = models.CharField( max_length=100, unique=True)
     bio = models.TextField(null=True)
     phone_number = models.CharField(max_length = 15,blank =True)
@@ -48,7 +48,9 @@ class Users(AbstractBaseUser):
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(default=dt.datetime.now)
     is_active = models.BooleanField(default=True)
+    status = models.IntegerField(default=1)
     is_storeadmin = models.BooleanField(default=False)
+    store = models.CharField(max_length=50,null=True)
     is_superuser = models.BooleanField(default=False)
     password = models.CharField(max_length=100)
     
@@ -78,6 +80,8 @@ class Deliveries(models.Model):
     items_received = models.IntegerField(default=0)
     items_spoiled = models.IntegerField(default=0)
     date_delivered = models.DateTimeField(default=dt.datetime.now)
+    store = models.CharField(max_length=50,default="A")
+    clerk = models.ForeignKey("Users",on_delete=models.CASCADE,default=1)
 
 
 class Item(models.Model):
@@ -86,11 +90,14 @@ class Item(models.Model):
     number_of_items = models.IntegerField(default=0)
     buying_price=models.FloatField(default=0.0)
     selling_price=models.FloatField(default=0.0)
+    store = models.CharField(max_length=50,default="A")
+    clerk = models.ForeignKey("Users",on_delete=models.CASCADE,default=1)
 
 
 class Request(models.Model):
     item_name = models.CharField(max_length=50)  
     number_of_items = models.IntegerField(default=0)
     status = models.CharField(max_length=50)
+    store = models.CharField(max_length=50,default="A")
     clerk = models.ForeignKey("Users",on_delete=models.CASCADE)
 

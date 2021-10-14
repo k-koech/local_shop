@@ -1,0 +1,5 @@
+<h3>Localshop Clerk<h3>
+<p>
+Hello{{name}}, We are hereby to inform you that you have been registered as a clerk in our store.To access your tasks, use the password {{passcode}} to log in as a clerk.<br>
+Thank you.
+</p>

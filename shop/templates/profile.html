@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+        <link href="{% static 'assets/profile.css' %}" rel="stylesheet" />
+{% endblock %}
+<div class="container rounded bg-white mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                <img class="rounded-circle mt-5" style="border:2px solid rgb(197, 197, 197);" width="150px" src="{{user.profile_photo.url}}">
+                <button type="button" class="btn btn-outline-primary btn-sm mt-2" style="border: none;box-shadow: none;" data-toggle="modal" data-target="#profilephoto">
+                    Update profile photo
+                </button>
+                <span class="font-weight-bold m-2">{{user.name}}</span>
+                {% if user.is_superuser %}
+                    <span class="font-weight-bold m-2">Merchant</span>
+                {% elif user.is_storeadmin %}
+                   <span class="font-weight-bold m-2">Store Admin</span>
+                {% else %}
+                   <span class="font-weight-bold m-2">Clerk</span>
+                {% endif %}
+
+                <span class="btn btn-outline-secondary text-black-50" style="width: 90%;overflow: hidden;">{{user.email}}</span><span> </span></div>
+        </div>
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Profile Settings</h4>
+                </div>
+                {% for message in messages %}
+                    {% if message.tags == "error" %}
+                        <div  class="alert alert-danger">{{ message }}</div>
+                    {% else %}
+                        <div  class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+                <form action="/update_profile" method="POST">
+                    {% csrf_token %}
+                    <div class="col-md-12 mb-3"><label class="labels">Name</label>
+                        <input type="text" class="form-control" readonly value="{{user.name}}">
+                    </div>
+
+                    <div class="col-md-12 mb-3"><label class="labels">Email</label>
+                        <input type="text" class="form-control" readonly value="{{user.email}}">
+                    </div>
+
+                    <div class="col-md-12 mb-3"><label class="labels">Username</label>
+                        <input type="text" class="form-control" name="username" placeholder="Enter username" value="{{user.username}}">
+                    </div>
+                
+                    <div class="row mt-3">
+                        <div class="col-md-12 mb-3"><label class="labels">Mobile Number</label>
+                            <input type="text" class="form-control" name="phone" placeholder="Enter phone number" value="{{user.phone_number}}">
+                        </div>
+                    
+                    </div>
+                
+                    <div class="mt-4 text-center"><button class="btn btn-outline-primary profile-button" type="submit">Save Profile</button></div>
+                    </form>
+                </div>
+        </div>
+   
+
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center experience"><span>Update Password</span><span class="border px-3 p-1 add-experience"><i class="fa fa-edit"></i>&nbsp;Password</span></div><br>
+                <form action="/updatepassword" method="POST">
+                    {% csrf_token %}
+                    <div class="col-md-12"><label class="labels">Password</label><input type="password" required name="old_password" class="form-control" placeholder="Old Password" ></div> <br>
+                    <div class="col-md-12"><label class="labels">Password</label><input type="password" required name="password" class="form-control" placeholder="Password" ></div> <br>
+                    <div class="col-md-12"><label class="labels">Confirm password</label><input type="password" required name="confirm_password" class="form-control" placeholder="Confirm password" ></div>
+                    <div class="mt-2 text-right" style="text-align:right;">
+                        <button class="btn btn-outline-primary" type="submit">Save Password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="profilephoto" tabindex="-1" role="dialog" aria-labelledby="profilephotoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="profilephotoLabel">Update profile</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form action="/update_profilephoto" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-md-12">
+                    <input type="file" required name="profile_photo" class="form-control rounded-0">
+                </div> 
+                <div class="mt-2 col-md-12">
+                    <button style="width: 100%;" onclick="savingprofilepic()" class="btn btn-outline-primary rounded-0" type="submit">Save Password</button>
+                </div>
+            </form>
+           
+         </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function savingprofilepic()
+    {
+         swal({
+        title:"Saving",
+        text:"Saving your profile . . .",
+        });
+    }
+   </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+{% endblock %}

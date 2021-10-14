@@ -6,40 +6,7 @@
 <!-- START OF MERCHANT SECTION -->
 <main>
     <div class="container-fluid px-4 mt-5">
-        <h4>Merchant</h4>
-        <div class="row">
-            <div class="col-lg-5">
-                <h6>Register a Store Admin</h6>
-                {% for message in messages %}
-                        {% if message.tags == "error" %}
-                            <div  class="alert alert-danger">{{ message }}</div>
-                        {% else %}
-                            <div  class="alert alert-{{ message.tags }}">{{ message }}</div>
-                        {% endif %}
-                {% endfor %}
-                <form method="POST" action="/register_storeadmin">
-                    {% csrf_token %}
-                    <div class="form-group mb-3">
-                        <label for="exampleInputEmail1">Name</label>
-                        <input type="text" class="form-control" required name="name" placeholder="Enter name">
-                    </div>
-                    <div class="form-group  mb-3">
-                      <label for="exampleInputEmail1">Email address</label>
-                      <input type="email" class="form-control" required name="email" placeholder="Enter email">
-                    </div>
-                    <div class="form-group  mb-3">
-                        <label for="exampleInputEmail1">Username</label>
-                        <input type="text" class="form-control" required name="username" placeholder="Enter username">
-                      </div>
-                    <div class="form-group  mb-3">
-                        <label for="exampleInputEmail1">Phone number</label>
-                        <input type="text" class="form-control" required name="phone" placeholder="Enter phone number">
-                    </div>
-                   
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                  </form>
-            </div>
-        </div>
+       {% include 'merchant_dashboard.html' %}
     </div>
 </main>
 <!-- END OF MERCHANT SECTION -->
@@ -47,112 +14,21 @@
 <!-- START OF STORE ADMIN SECTION -->
 {% elif user.is_storeadmin %}
 <main>
-    <div class="container-fluid px-4">
-        <h1 class="mt-4">Store Admin Dashboard</h1>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-        <div class="row">
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-primary text-white mb-4">
-                    <div class="card-body">Primary Card</div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#">View Details</a>
-                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-warning text-white mb-4">
-                    <div class="card-body">Warning Card</div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#">View Details</a>
-                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-success text-white mb-4">
-                    <div class="card-body">Success Card</div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#">View Details</a>
-                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card bg-danger text-white mb-4">
-                    <div class="card-body">Danger Card</div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#">View Details</a>
-                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xl-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <i class="fas fa-chart-area me-1"></i>
-                        Area Chart Example
-                    </div>
-                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
-                </div>
-            </div>
-            <div class="col-xl-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <i class="fas fa-chart-bar me-1"></i>
-                        Bar Chart Example
-                    </div>
-                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
-                </div>
-            </div>
-        </div>
-        <div class="card mb-4">
-            <div class="card-header">
-                <i class="fas fa-table me-1"></i>
-                DataTable Example
-            </div>
-            <div class="card-body">
-                <table id="datatablesSimple">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>Office</th>
-                            <th>Age</th>
-                            <th>Start date</th>
-                            <th>Salary</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>Office</th>
-                            <th>Age</th>
-                            <th>Start date</th>
-                            <th>Salary</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                            <td>Edinburgh</td>
-                            <td>61</td>
-                            <td>2011/04/25</td>
-                            <td>$320,800</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="container-fluid mt-5 px-4">
+      {% include 'storeadmin_dashboard.html' %}
+       
     </div>
 </main>
 <!-- END OF STORE ADMIN SECTION -->
+<!--Clerk user-->
+{%else%}
 
+<main>
+    <div class="container">
+        {% include 'clerk_dashboard.html' %}
+    </div>
+
+</main>
+<!---->
 {% endif %}
 {% endblock %}

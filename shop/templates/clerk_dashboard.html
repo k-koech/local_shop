@@ -1,0 +1,210 @@
+{% load static %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<h4 class="font-weight-bold mt-4">Dashboard</h4>
+<div class="container-fluid">
+  <div class="">
+    <h4>Store <strong>{{user.store}}</strong> Clerk</h4>
+  </div>
+
+  {% for message in messages %}
+  {% if message.tags == "error" %}
+  <div class="alert alert-danger">{{ message }}</div>
+  {% else %}
+  <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endif %}
+  {% endfor %}
+  <div class="row">
+    <div class="col-xl-4 col-md-6">
+      <div class="card bg-dark text-white mb-4">
+        <div class="card-body">Stock in store {{request.usser.store}}</div>
+        <div class="card-footer d-flex align-items-center justify-content-between">
+          <a class="text-white stretched-link">{{storeitems_count.number_of_items__sum}}</a>
+          <div class="text-white"><i class="fas fa-3x fa-dolly-flatbed"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4 col-md-6">
+      <div class="card bg-success text-white mb-4">
+        <div class="card-body">My Deliveries</div>
+        <div class="card-footer d-flex align-items-center justify-content-between">
+          <a class="text-white stretched-link">{{clerk_deliveries_count}}</a>
+          <div class="text-white"><i class="fas fa-3x fa-truck"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4 col-md-6">
+      <div class="card bg-secondary text-white mb-4">
+        <div class="card-body">Requests made</div>
+        <div class="card-footer d-flex align-items-center justify-content-between">
+          <a class="text-white stretched-link">{{clerk_requests_count}}</a>
+          <div class="text-white"><i class="far fa-3x fa-comments"></i></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <td>{{item.items_spoiled}}</td>
+  <td>{{item.date_delivered|date}}</td>
+
+  <!-- START OF STOREADMINS -->
+
+
+  <!-- END OF STOREADMINS -->
+
+  <!-- START OF DELIVERIES -->
+  <div class="container bg-light rounded pt-2 pb-2 mb-3">
+    <h4 class="mb-1 mt-2 font-weight-bold text-center">Deliveries</h4>
+    <h5 class="mt-1 font-weight-bold">Paid products</h5>
+    <table id="paid_deliveriesTable" class="table table-striped table-bordered" style="width:100%">
+      <thead>
+        <tr>
+          <th>Item Code</th>
+          <th>Item Name</th>
+          <th>Status</th>
+          <th>Items Received</th>
+          <th>Items Spoiled</th>
+          <th>Date received</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% if clerk_paid_deliveries %}
+        {% for item in clerk_paid_deliveries%}
+        <tr>
+          <td>{{item.item_code}}</td>
+          <td><a href="#">{{item.item_name}}</a></td>
+          <td>
+            {% if item.status %}
+            <button class="btn btn-success btn-sm">Paid</button>
+            {% else %}
+            <button class="btn btn-danger btn-sm">Not Paid</button>
+            {% endif %}
+          </td>
+          <td>{{item.items_received}}</td>
+          <td>{{item.items_spoiled}}</td>
+          <td>{{item.date_delivered|date}}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <div class="alert alert-info text-center">
+          No item has been Paid
+        </div>
+        {% endif %}
+      </tbody>
+    </table>
+
+    <hr>
+    <h5 class="mt-4 font-weight-bold">UnPaid products</h5>
+    <table id="paid_deliveriesTable" class="table table-striped table-bordered" style="width:100%">
+      <thead>
+        <tr>
+          <th>Item Code</th>
+          <th>Item Name</th>
+          <th>Status</th>
+          <th>Items Received</th>
+          <th>Items Spoiled</th>
+          <th>Date received</th>
+        </tr>
+      </thead>
+      <tbody> 
+      {% if clerk_unpaid_deliveries %}
+        {% for item in clerk_unpaid_deliveries %}
+       
+        <tr>
+          <td>{{item.item_code}}</td>
+          <td><a href="#">{{item.item_name}}</a></td>
+          <td>
+            <form action="" method="post">
+              {% csrf_token %}
+              <input type="text" name="id" value="{{item.id}}" hidden>
+              <div class="col-sm-2">
+                <button type="submit" name="clerk" value="confirm_paid" class="btn btn-outline-danger btn-sm">Confirm_Paid</button> 
+              </div>
+            </form>
+          </td>
+          <td>{{item.items_received}}</td>
+          <td>{{item.items_spoiled}}</td>
+          <td>{{item.date_delivered|date}}</td>
+        </tr>
+       
+        {% endfor %}
+      {% else %}
+        <div class="alert alert-info text-center">
+          No item is UnPaid
+        </div>
+      
+      {% endif %}
+      </tbody>
+    </table>
+   
+  </div>
+  <!-- END OF DELIVERIES -->
+
+  <!-- # STOCK -->
+  <div class="container bg-light rounded pt-2 pb-2 mb-3">
+    <h4 class="mb-1 mt-2 font-weight-bold text-center"> Store {{user.store}} stock</h4>
+    {% if individual_store_stock %}
+    <table id="stockTable" class="table table-striped table-bordered" style="width:100%">
+      <thead>
+        <tr>
+          <th>Item Code</th>
+          <th>Item Name</th>
+          <th>Number of items</th>
+          <th>Buying price</th>
+          <th>Selling price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in individual_store_stock %}
+        <tr>
+          <td>{{item.item_code}}</td>
+          <td><a href="#">{{item.item_name}}</a></td>
+          <td>{{item.number_of_items}}</td>
+          <td>{{item.buying_price}}</td>
+          <td>{{item.selling_price}}</td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-info text-center">
+      No item in Stock
+    </div>
+    {% endif %}
+
+
+  </div>
+  <!-- END OF STOCK  -->
+
+
+
+
+
+
+
+  <!-- SCRIPT  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script>
+    // Tables
+    $(document).ready(function () {
+      $('#unpaid_deliveriesTable').DataTable();
+    });
+    $(document).ready(function () {
+      $('#paid_deliveriesTable').DataTable();
+    });
+    $(document).ready(function () {
+      $('#stockTable').DataTable();
+    });
+
+    $(document).ready(function () {
+      $('#storeadminsTable').DataTable();
+    });
+
+
+  </script>

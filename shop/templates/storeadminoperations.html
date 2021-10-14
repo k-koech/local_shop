@@ -1,0 +1,243 @@
+{% load static %}
+
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+    {% endblock  %}
+
+        <!--Deactivate-->
+<div class="modal fade" id="deactivate" tabindex="-1" aria-labelledby="deactivateLabel" aria-hidden="true">     
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-bold" id="deactivateLabel">Active Clerks</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                <div class="row" style="font-weight:bold;">
+                    <div class="col-3">Username</div><div class="col-5">Email</div><div class="col-2">Status</div><div class="col-1" style="min-width:fit-content;">Action</div>
+                </div>
+                {% if clerks %}
+                {% for clerk in clerks%}
+                    {% if clerk.is_active == True %}
+                        <div class="row" style="margin-top:5px;height:30px;">
+                         <div class="col-3">{{clerk.username|capfirst}}</div><div class="col-5">{{clerk.email}}</div><div class="col-2">{% if clerk.is_active %}Active{%else%}Inactive{% endif %}</div><div class="col-1">
+                        <a href='admindeact_clerk/{{clerk.id}}'><button class="btn btn-primary">Deactivate</button></a></div>
+                        </div>
+                        <hr/>
+                        {%else%}
+                        <div class="alert alert-danger text-center">
+                        No clerk is Active!</div>
+                    {% endif %}
+                {% endfor %}
+                {% else %}
+                <div class="alert alert-danger text-center">
+                No clerk has been Added!
+                </div>
+                {% endif %}
+                
+                 
+      </div>
+  </div>
+
+</div>
+</div>
+<!--Activate-->
+<div class="modal fade" id="activate" tabindex="-1" aria-labelledby="activateLabel" aria-hidden="true">     
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold" id="deactivateLabel">Inactive Clerks</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+                  <div class="row" style="font-weight:bold;">
+                      <div class="col-3">Username</div><div class="col-5">Email</div><div class="col-2">Status</div><div class="col-1" style="min-width:fit-content;">Action</div>
+                  </div>
+                  {% if clerks %}
+                  {% for clerk in clerks%}
+                      {% if clerk.is_active == False %}
+                          <div class="row" style="margin-top:5px;height:30px;">
+                           <div class="col-3">{{clerk.username|capfirst}}</div><div class="col-5">{{clerk.email}}</div><div class="col-2">{% if clerk.is_active %}Active{%else%}Inactive{% endif %}</div><div class="col-1">
+                          <a href='adminact_clerk/{{clerk.id}}'><button class="btn btn-primary">Activate</button></a></div>
+                          </div>
+                          <hr/>
+                            {%else%}
+                          <div class="alert alert-danger text-center">
+                          No clerk is InActive!</div>
+                      {% endif %}
+                  {% endfor %}
+                  {% else %}
+                    <div class="alert alert-danger text-center">
+                          No clerk has been Added!</div>
+                  {% endif %}
+                      
+        </div>
+    </div>
+  
+  </div>
+  </div>
+  <!-- Delete clerk -->
+  <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="deleteLabel" aria-hidden="true">     
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold" id="deleteLabel">Active Clerks</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+                   <div class="row" style="font-weight:bold;">
+                    <div class="col-3">Username</div><div class="col-5">Email</div><div class="col-2">Status</div><div class="col-1" style="min-width:fit-content;">Action</div>
+                </div>
+                {% for clerk in clerks%}
+                        <div class="row" style="margin-top:5px;">
+                         <div class="col-3">{{clerk.username|capfirst}}</div><div class="col-5">{{clerk.email}}</div><div class="col-2">{% if clerk.is_active %}Active{%else%}Inactive{% endif %}</div><div class="col-1">
+                        <a href='delete_clerk/{{clerk.id}}'><button class="btn btn-danger">Delete</button></a></div>
+                        </div>
+                        <hr/>
+                        {%empty%}
+                        <div style="text-align:center;color:red;margin-top:20px;font-weight:bold;">
+                        No clerk has been Added!</div>
+                {% endfor %}
+        </div>
+    </div>
+  
+  </div>
+  </div>
+
+<!--Update user-->
+<div class="modal fade" id="update" tabindex="-1" aria-labelledby="updateLabel" aria-hidden="true">     
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold" id="updateLabel">Active Clerks</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="row" style="height:30px;">
+                <div class="row" style="background:#f0f0f0;width:fit-content;margin:0px auto;display:none;" id="updatestatus"></div>
+                </div>
+            <div class="row" style="font-weight:bold;">
+                <div class="col-3">Email</div><div class="col-3">Username</div><div class="col-3">Phone Number</div><div class="col-2">Action</div>
+            </div>
+             {% if clerks %}
+        {% for clerk in clerks%}
+        <form method="post" action='' id="form{{clerk.id}}">
+        {% csrf_token %}
+        
+            <div class="row">
+                
+                <div class="col-3">
+                    <input type="email" style="width:95%;" name="mail" placeholder="{{clerk.email}}" value="{{clerk.email}}"/>
+                </div>
+                <div class="col-3">
+                    <input type="text" style="width:95%;" name='username' placeholder='{{clerk.username}}' value="{{clerk.username}}"/></div>
+                <div class="col-3">
+                    <input type='text' style="width:95%;" value="{{clerk.phone_number}}" name='phone' placeholder='phone number'/></div>
+                <div class="col-2">
+                    <button class="btn btn-primary" id='btn{{clerk.id}}'>Update</button>
+                    {% block jquery %}
+            <script>
+            $('#form{{clerk.id}}').submit(
+                function(e){
+                    e.preventDefault();
+                    var data=$(this).serialize();
+                    console.log(data);
+                    $.ajax({
+                        method:'POST',
+                        url:'update_clerk/{{clerk.id}}',
+                        data:data,
+                        beforeSend:function(){
+                            $("#updatestatus").fadeIn();
+                            
+                            $('#updatestatus').html("<span style='color:green;text-align:center;font-weight:bold;'>Processing...</span>")},
+                        complete:function(){
+                            setTimeout(function(){
+                            $('#updatestatus').html("<span style='color:green;text-align:center;font-weight:bold;'> Done </span>")},2000)}
+                    }).fail(function(){
+                        $('#updatestatus').html("<span style='color:red;text-align:center;font-weight:bold;'>Error! Cant update clerk</span>")}).done(
+                        function(res){
+                            if(res['response']=='success'){
+                            setTimeout(function(){
+                                $('#updatestatus').fadeOut();
+                            },2000)
+                            }
+                            else{
+                              console.log(res['response'])
+                              document.getElementById('updatestatus').innerHTML=res['response'];
+                              setTimeout(function(){
+                              
+                                $('#updatestatus').fadeOut();
+                            },5000)
+                            }
+                    
+                    });
+                }
+            )
+            </script>
+                            {% endblock  %}
+                        </div>
+                    </div>
+                    <hr/>
+                </form>
+            {% endfor %}
+{% else %}
+    <div class="alert alert-danger text-center">
+No clerk is Available
+    </div>
+{% endif %}
+    </div>
+  
+  </div>
+  </div>
+
+<div class="modal fade" id="addclerkmodal" tabindex="-1" aria-labelledby="addclerkmodalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-bold" id="addclerkmodalLabel">Add Clerk</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            {% for message in messages %}
+            {% if message.tags == "error" %}
+            <div class="alert alert-danger">{{ message }}</div>
+            {% else %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endif %}
+            {% endfor %}
+            <form method="POST" action="/addclerk">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="exampleInputEmail1">Name</label>
+                    <input type="text" class="form-control" required name="name" placeholder="Enter name">
+                </div>
+                <div class="form-group  mb-3">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" required name="email" placeholder="Enter email">
+                </div>
+                <div class="form-group  mb-3">
+                    <label for="exampleInputEmail1">Username</label>
+                    <input type="text" class="form-control" required name="username" placeholder="Enter username">
+                </div>
+                <div class="form-group  mb-3">
+                    <label for="exampleInputEmail1">Phone number</label>
+                    <input type="text" class="form-control" required name="phone" placeholder="Enter phone number">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>      
+      </div>
+  </div>
+</div>

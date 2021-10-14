@@ -1,0 +1,389 @@
+{% load static %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<h4 class="font-weight-bold">Dashboard</h4>
+<div class="container-fluid">  
+    <div class="d-flex text-right mb-3">
+        <div class="">
+            <h4>Merchant Dashboard</h4>
+        </div>
+        <div class="ml-auto">
+            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#storeadminmodal">
+                <i class="fa fa-plus" aria-hidden="true"></i>  Add store admin
+            </button>
+        </div>
+    </div>
+    
+    <div class="row">
+        
+        <div class="col-xl-4 col-md-6">
+          <div class="card bg-primary text-white mb-4">
+              <div class="card-body">Overall Stock</div>
+              <div class="card-footer d-flex align-items-center justify-content-between">
+                  <a class="text-white stretched-link" >{{items_count.number_of_items__sum}}</a>
+                  <div class="text-white"><i class="fas fa-3x fa-dolly-flatbed"></i></div>
+              </div>
+          </div>
+       </div>
+       
+        <div class="col-xl-4 col-md-6">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">Overall Deliveries</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="text-white stretched-link" >{{deliveries_count}}</a>
+                    <div class="text-white"><i class="fas fa-3x fa-truck"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-6">
+            <div class="card bg-dark text-white mb-4">
+                <div class="card-body">Store Admins</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="text-white stretched-link">{{storeadmins_count}}</a>
+                    <div class="text-white"><i class="fas fa-3x fa-user-check"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <td>{{item.items_spoiled}}</td>
+    <td>{{item.date_delivered|date}}</td>
+
+      <!-- START OF STOREADMINS -->
+    <div class="container bg-light rounded pt-2 pb-2 mb-3">
+        <h4 class="mb-1 mt-2 font-weight-bold">Store Admins</h4>
+        {% for message in messages %}
+        {% if message.tags == "error" %}
+        <div class="alert alert-danger">{{ message }}</div>
+        {% else %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endif %}
+        {% endfor %}
+        <div class="table-responsive">
+         <table id="storeadminsTable" class="table table-striped table-bordered" style="width:100%; overflow:scroll;">
+         <thead>
+           <tr>  
+             <th>Name</th>
+             <th>Email</th>
+             <td>Store</td>
+             <th>Status</th>
+             <th></th>
+             <th></th>
+           </tr>
+         </thead>
+         <tbody>
+         {% for storeadmin in storeadmins %}
+           <tr>
+             <td>{{storeadmin.name}}</td>
+             <td><a>{{storeadmin.email}}</a></td>
+             <td>{{storeadmin.store}}</td>
+             <td>
+                {% if storeadmin.is_active %}
+                <button class="btn btn-success btn-sm">Active</button> 
+                {% else %}
+                <button class="btn btn-danger btn-sm">Not Active</button> 
+                {% endif %}
+             </td>
+             <td>
+               {% if storeadmin.is_active %}
+                <form action="" method="post">
+                  {% csrf_token %}
+                  <input type="text" name="id" value="{{storeadmin.id}}" hidden>
+                  <div class="col-sm-2">
+                    <button type="submit" name="merchant" value="deactivate" class="btn btn-outline-primary btn-sm">Deactivate</button>
+                  </div>
+                </form>
+               {% else %}
+                <form action="" method="post">
+                  {% csrf_token %}
+                  <input type="text" name="id" value="{{storeadmin.id}}" hidden>
+                  <div class="col-sm-2">
+                    <button type="submit" name="merchant" value="activate" class="btn btn-outline-success btn-sm">Activate</button> 
+                  </div>
+                </form>
+               {% endif %}
+             </td>
+             <td>
+              <form action="" method="post">
+                {% csrf_token %}
+                <input type="text" name="id" value="{{storeadmin.id}}" hidden>
+                <div class="col-sm-2">
+                  <button type="submit" class="btn btn-outline-danger btn-sm" name="merchant" value="delete"><i class="fas fa-trash-alt"></i> Delete</button> 
+                </div>
+              </form>
+                
+             </td>
+           </tr>
+         {% endfor %}
+         </tbody>
+       </table>   
+       </div>
+    </div>
+    <!-- END OF STOREADMINS -->
+
+    <!-- START OF DELIVERIES -->
+    <div class="container bg-light rounded pt-2 pb-2 mb-3">
+           <h4 class="mb-1 mt-2 font-weight-bold">Deliveries</h4>
+      
+           <div class="table-responsive">
+            <table id="deliveriesTable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+              <tr>  
+                <th>Item Code</th>
+                <th>Item Name</th>
+                <th>Store</th>
+                <th>Status</th>
+                <th>Items Received</th>
+                <th>Items Spoiled</th>
+                <th>Date received</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for item in deliveries %}
+              <tr>
+                <td>{{item.item_code}}</td>
+                <td><a href="#">{{item.item_name}}</a></td>
+                <td>{{item.store}}</td>
+                <td>
+                {% if item.status %}
+                 <button class="btn btn-success btn-sm">Paid</button> 
+                {% else %}
+                 <button class="btn btn-danger btn-sm">Not Paid</button> 
+                {% endif %}
+                </td>
+                <td>{{item.items_received}}</td>
+                <td>{{item.items_spoiled}}</td>
+                <td>{{item.date_delivered|date}}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>  
+         </div> 
+    </div>
+    <!-- END OF DELIVERIES -->
+
+<!--==============GRAPHS========================-->
+    <!-- START OF STOCK -->
+      <div class="row bg-light pt-2 rounded">
+        <div class="col-xl-6">
+          <div class="card mb-4">
+              <div class="card-header">
+                  <i class="fas fa-chart-bar me-1"></i>
+                  STOCK PER STORE
+              </div>
+              <div class="d-flex flex-row bd-highlight mb-3">
+                <div class="p-2 flex-fill bd-highlight">
+                  <form method="post" action="">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                      <div class="col-sm-8 mx-0">
+                        <select class="form-control rounded-0" required name='store_name'>
+                          <option value="">Select Store</option>
+                          {% for store in stores %}
+                            <option value="{{store}}">Store {{store}}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="col-sm-2">
+                        <button type="submit" value="searchitemsby_store_name" name="merchant" class="btn btn-primary">Filter</button>
+                      </div>
+                      
+                    </div>
+                     
+                  </form>
+                  
+                </div>
+                <div class="p-2 bd-highlight">
+                </div>
+              </div>
+              <div class="card-body">
+               {% if deliveries %}
+                <canvas id="storeItemsChart" width='100%' height='80'></canvas>
+               {% else %}
+                <div class="alert alert-info">No delivery has been made! </div>
+               {% endif %}
+              </div> 
+          </div>
+        </div>
+        <!-- END OF STOCK  -->
+
+        <!-- START DELIVERY PER STORE -->
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-area me-1"></i>
+                    DELIVERY PER STORE
+                </div>
+
+                <div class="d-flex flex-row bd-highlight mb-3">
+                  <div class="p-2 flex-fill bd-highlight">
+                    <form method="post" action="">
+                      {% csrf_token %}
+                      <div class="form-group row">
+                        <div class="col-sm-8 mx-0">
+                          <select class="form-control rounded-0" required name='store_name'>
+                            <option value="">Select Store</option>
+                            {% for store in stores %}
+                              <option value="{{store}}">Store {{store}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                        <div class="col-sm-2">
+                          <button type="submit" name="merchant" value="searchdeliveriesby_store_name" class="btn btn-primary">Filter</button>
+                        </div>
+                        
+                      </div>
+                       
+                    </form>
+                    
+                  </div>
+                  <div class="p-2 bd-highlight">
+                  </div>
+                </div>
+                
+                <div class="card-body">
+                  {% if store_items %}
+                        <canvas id="myChart" width="100%" height="80"></canvas>
+                  {% else %}
+                    <div class="alert alert-info">There is nothing in stores! </div>
+                  {% endif %}
+                </div>
+            </div>
+        </div>
+         <!--END OF DELIVERY PER STORE -->
+       
+    </div>
+  
+    
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="storeadminmodal" tabindex="-1" aria-labelledby="storeadminmodalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-bold" id="storeadminmodalLabel">Register a Store Admin</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <h6></h6>
+                {% for message in messages %}
+                {% if message.tags == "error" %}
+                <div class="alert alert-danger">{{ message }}</div>
+                {% else %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endif %}
+                {% endfor %}
+            <form method="POST" action="/register_storeadmin">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="exampleInputEmail1">Name</label>
+                    <input type="text" class="form-control" required name="name" placeholder="Enter name">
+                </div>
+                <div class="form-group  mb-3">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" required name="email" placeholder="Enter email">
+                </div>
+                <div class="form-group  mb-3">
+                    <label for="exampleInputEmail1">Username</label>
+                    <input type="text" class="form-control" required name="username" placeholder="Enter username">
+                </div>
+                <div class="form-group  mb-3">
+                    <label for="exampleInputEmail1">Phone number</label>
+                    <input type="text" class="form-control" required name="phone" placeholder="Enter phone number">
+                </div>
+                <div class="form-group  mb-3">
+                    <label for="exampleInputEmail1">Store name</label>
+                    <input type="text" class="form-control" required name="store_name" placeholder="Enter store name">
+                </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+     
+      
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPT  -->
+<script>
+  // Tables
+    $(document).ready( function () {
+    $('#deliveriesTable').DataTable();
+} );
+
+$(document).ready( function () {
+    $('#storeadminsTable').DataTable();
+} );
+
+//Start of Deliveries charts
+var xValues = [{% for item in deliveries %}'{{ item.item_name }}',{% endfor %}];
+var yValues=[{% for item in deliveries %}{{ item.items_received }},{% endfor %}];
+var barColors = ["red", "green","blue","orange","brown"];
+
+new Chart("myChart", {
+  type: "bar",
+  
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+
+  },
+  options: {
+    scales: {
+        yAxes: [{
+            display: true,
+            stacked: true,
+            ticks: {
+                min: 0, // minimum value
+                max: 100, // maximum value
+                stepSize: 5
+            }
+        }]
+    },
+    legend: {display: false},
+    title: {
+      display: true,
+      text: '{{ deliveries_caption }}'
+    }
+  }
+});
+//End of Deliveries charts
+
+//Start of Item charts
+var xValues = [{% for item in store_items %}'{{ item.item_name }}',{% endfor %}];
+var yValues = [{% for item in store_items %}'{{ item.number_of_items }}',{% endfor %}];
+var barColors = [
+  "#b91d47","#00aba9","#2bc797","#e8c3b9","#9bc2c7","#e8c9i9",
+];
+
+new Chart("storeItemsChart", {
+  type: "pie",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: '{{stores_caption}}'
+    }
+  }
+});
+                         
+//End of Item charts
+</script>
+

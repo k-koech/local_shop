@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% if user.is_superuser %}
+
+
+<div class="alert alert-danger" role="alert">
+    You are not a clerk to access this page!
+</div>
+{% elif user.is_storeadmin %}
+<div class="alert alert-danger" role="alert">
+    You are not a clerk to access this page!
+</div>
+{% else %}
+
+{% block styles %}
+<link href="{% static 'send_requests/css/main.css' %}" rel="stylesheet" />
+{% endblock %}
+
+<div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
+    <div class="wrapper wrapper--w790">
+        <div class="card card-5">
+            <div class="card-heading">
+                <h2 class="title">Request an Item</h2>
+            </div>
+            <div class="card-body">
+                {% for message in messages %}
+                {% if message.tags == "error" %}
+                <div class="alert alert-danger">{{ message }}</div>
+                {% else %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endif %}
+                {% endfor %}
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="name">Item Name</div>
+                        <div class="value">
+                            <div class="input-group">
+                                <input required class="input--style-5" type="text" name="item_name" placeholder="Enter item name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="name">Number of Items</div>
+                        <div class="value">
+                            <div class="input-group">
+                                <input required class="input--style-5" type="text" name="number_of_items" placeholder="Enter number of items">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="float-right">
+                        <button class="btn btn-outline-primary btn-lg" type="submit">Send Request</button>
+                    </div>
+                </form>
+            </div>
+            <div class="container">
+                <h4 class="text-center mt-2 mb-2"><strong>Requests sent</strong></h4>
+                {% if requests %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Request number</th>
+                            <th scope="col">Item name</th>
+                            <th scope="col">Number of items</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in requests %}
+                        <tr>
+                            <th scope="row">{{request.id}}</th>
+                            <td>{{request.item_name}}</td>
+                            <td>{{request.number_of_items}}</td>
+                            {% if request.status == "Approved" %}
+                             <td><button class="btn btn-success btn-sm">{{request.status}}</button></td>
+                            {% elif request.status == "Declined" %}
+                             <td><button class="btn btn-danger btn-sm">{{request.status}}</button></td>
+                            {% else %}
+                             <td><button class="btn btn-secondary btn-sm">{{request.status}} ...</button></td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>    
+                        {% else %}
+                        <div class="alert alert-info">You have send no requests at the moment</div>
+                        {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
