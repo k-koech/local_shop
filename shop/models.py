@@ -81,7 +81,7 @@ class Deliveries(models.Model):
     items_spoiled = models.IntegerField(default=0)
     date_delivered = models.DateTimeField(default=dt.datetime.now)
     store = models.CharField(max_length=50,default="A")
-    clerk = models.ForeignKey("Users",on_delete=models.CASCADE)
+    clerk = models.ForeignKey("Users",on_delete=models.CASCADE,default=1)
 
 
 class Item(models.Model):
