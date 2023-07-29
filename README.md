@@ -1,8 +1,8 @@
-# NEIGHBORS APPLICATION 
+# LOCALSHOP APPLICATION 
 #### The app is a LocalShop App, 20/10/2021
 #### **By Kelvin Kipchumba**
 ## Project Description
-    The application allows user to know what is happening in his/her neighborhood most of the time. Its also a platform where important meeting, theft or even death cases are announced
+    The application is a multiUser system for a localshop.
 ## Setup/Installation Requirements
     - Download a file in the code section to the desired folder
     - Extract the files
@@ -48,7 +48,7 @@ Deployed project can be accessed here [neighborhood](https://django-neighborhood
     - HTML
     - CSS
     - Javasript
-    - Jquery
+    - React
     - Fontawesome
     - Bootstrap
     - Python
@@ -59,4 +59,4 @@ Deployed project can be accessed here [neighborhood](https://django-neighborhood
 
 ### License
 *Licenced under the [MIT-licence](https://github.com/k-koech/localshop/blob/master/LICENSE.md)*
-Copyright (c) 2021 **Kelvin Kipchumba, Nicholas Omondi, Franklin Kuloba, Isaiah Morara**
+Copyright (c) 2021 **Kelvin Kipchumba**
